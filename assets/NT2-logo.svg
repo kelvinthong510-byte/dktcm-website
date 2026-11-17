@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="140" viewBox="0 0 480 140" role="img" aria-labelledby="title desc">
+  <title id="title">NT-2 Corporation</title>
+  <desc id="desc">Three people joined in a blue and teal workforce mark beside the NT-2 Corporation wordmark.</desc>
+  <g fill="#155a9b">
+    <circle cx="64" cy="35" r="15"/>
+    <path d="M39 104V79a25 25 0 0 1 50 0v25H74V80a10 10 0 0 0-20 0v24Z"/>
+  </g>
+  <g fill="#357d80">
+    <circle cx="25" cy="49" r="11"/><circle cx="103" cy="49" r="11"/>
+    <path d="M7 104V82a18 18 0 0 1 28-15l-5 13a6 6 0 0 0-9 5v19Zm100 0V85a6 6 0 0 0-9-5l-5-13a18 18 0 0 1 28 15v22Z"/>
+  </g>
+  <path d="M145 27v85" stroke="#dce6eb" stroke-width="2"/>
+  <text x="168" y="78" fill="#155a9b" font-family="Arial,Helvetica,sans-serif" font-size="66" font-weight="700" letter-spacing="-2">NT-2</text>
+  <text x="172" y="108" fill="#357d80" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="600" letter-spacing="5">CORPORATION</text>
+</svg>
