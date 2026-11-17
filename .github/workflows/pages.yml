@@ -23,6 +23,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Decode binary assets
+        run: |
+          set -euo pipefail
+          found=0
+          while IFS= read -r -d '' f; do
+            out="${f%.b64}"
+            base64 -d "$f" > "$out"
+            rm -f "$f"
+            found=$((found + 1))
+            echo "Decoded $out ($(wc -c < "$out") bytes)"
+          done < <(find assets -type f -name '*.b64' -print0)
+          if [ "$found" -eq 0 ]; then
+            echo "No .b64 assets found" >&2
+            exit 1
+          fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
