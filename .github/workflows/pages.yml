@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,7 +15,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  publish-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Decode binary assets
+        run: |
+          set -euo pipefail
+          found=0
+          while IFS= read -r -d '' f; do
+            out="${f%.b64}"
+            base64 -d "$f" > "$out"
+            rm -f "$f"
+            found=$((found + 1))
+            echo "Decoded $out ($(wc -c < "$out") bytes)"
+          done < <(find assets -type f -name '*.b64' -print0)
+          if [ "$found" -eq 0 ]; then
+            echo "No .b64 assets found" >&2
+            exit 1
+          fi
+      - name: Publish clean site to published branch
+        run: |
+          set -euo pipefail
+          rm -rf .github
+          find . -name '*.b64' -delete
+          mkdir -p /tmp/dktcm-site
+          tar -cf - --exclude .git . | tar -xf - -C /tmp/dktcm-site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan published-tmp
+          git rm -rfq --cached .
+          rm -rf ./*
+          # keep hidden files except git
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cp -a /tmp/dktcm-site/. .
+          git add -A
+          git status
+          git commit -m "Publish static preview site"
+          git push -f origin HEAD:published
+
+  deploy-pages:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
