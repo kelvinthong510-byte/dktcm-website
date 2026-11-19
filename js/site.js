@@ -9,9 +9,18 @@
   if(f){var sel=f.querySelector('#topic'),q=new URLSearchParams(location.search).get('to');
     if(q){for(var i=0;i<sel.options.length;i++){if(sel.options[i].dataset.key===q){sel.selectedIndex=i}}}
     var show=document.getElementById('route-to');function upd(){var o=sel.options[sel.selectedIndex];show.textContent=o&&o.value?o.value:'enquiry@dktconsult.com'}sel.addEventListener('change',upd);upd();
+    var st=document.getElementById('form-status'),btn=document.getElementById('send');
+    function msg(cls,html){st.className=cls?'form-msg '+cls:'';st.innerHTML=html}
     f.addEventListener('submit',function(e){e.preventDefault();if(!f.reportValidity())return;
       var o=sel.options[sel.selectedIndex],to=o.value||'enquiry@dktconsult.com',v=function(id){return(f.querySelector('#'+id).value||'').trim()};
-      var subj='Website enquiry: '+o.text+(v('org')?' ('+v('org')+')':'');
-      var body='Name: '+v('name')+'\nEmail: '+v('email')+'\nPhone: '+v('phone')+'\nOrganisation: '+v('org')+'\nTopic: '+o.text+'\n\n'+v('msg');
-      location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body)})}
+      var topic=o.text,data={_subject:'Website enquiry: '+topic,_replyto:v('email'),_captcha:'false',_template:'table',_honey:v('hp'),
+        Topic:topic,Name:v('name'),Email:v('email'),Phone:v('phone')||'-',Company:v('org')||'-',Message:v('msg'),Page:location.href};
+      var mail='mailto:'+to+'?subject='+encodeURIComponent(data._subject)+'&body='+encodeURIComponent('Name: '+data.Name+'\nEmail: '+data.Email+'\nPhone: '+data.Phone+'\nCompany: '+data.Company+'\nTopic: '+topic+'\n\n'+data.Message);
+      btn.disabled=true;btn.textContent='Sending…';msg('','');
+      fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok||String(j.success)==='false')throw new Error(j.message||'failed');return j})})
+      .then(function(){f.reset();upd();msg('ok','<strong>Thank you. Your enquiry has been sent.</strong> We will reply to you by email as soon as possible.');btn.textContent='Sent'})
+      .catch(function(){msg('err','Sorry, your enquiry could not be sent just now. Please try again, or <a href="'+mail+'">email us directly at '+to+'</a>.');btn.disabled=false;btn.textContent='Send enquiry'})
+      .then(function(){if(btn.textContent==='Sent')setTimeout(function(){btn.disabled=false;btn.textContent='Send enquiry'},4000)})
+})}
 })();
