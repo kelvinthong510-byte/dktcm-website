@@ -93,3 +93,5 @@ input,select,textarea{width:100%;font:400 1rem var(--bfont);padding:.8rem .9rem;
 .wa{position:fixed;right:1.1rem;bottom:1.1rem;z-index:60;width:54px;height:54px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.2)}.wa svg{width:28px;height:28px;fill:#fff}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}.reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}.gallery figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .3s}.gallery a:hover img{transform:scale(1.03)}.gallery figcaption{padding:.7rem .9rem;font-size:.86rem;color:var(--muted)}
+.leader .portrait{width:100%;max-width:220px;border-radius:20px;object-fit:cover;aspect-ratio:4/5;background:#eaf1f8;box-shadow:var(--shadow)}

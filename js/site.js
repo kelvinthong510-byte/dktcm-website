@@ -8,9 +8,9 @@
   var f=document.getElementById('enquiry');
   if(f){var sel=f.querySelector('#topic'),q=new URLSearchParams(location.search).get('to');
     if(q){for(var i=0;i<sel.options.length;i++){if(sel.options[i].dataset.key===q){sel.selectedIndex=i}}}
-    var show=document.getElementById('route-to');function upd(){var o=sel.options[sel.selectedIndex];show.textContent=o&&o.value?o.value:'admin@dktconsult.com'}sel.addEventListener('change',upd);upd();
+    var show=document.getElementById('route-to');function upd(){var o=sel.options[sel.selectedIndex];show.textContent=o&&o.value?o.value:'enquiry@dktconsult.com'}sel.addEventListener('change',upd);upd();
     f.addEventListener('submit',function(e){e.preventDefault();if(!f.reportValidity())return;
-      var o=sel.options[sel.selectedIndex],to=o.value||'admin@dktconsult.com',v=function(id){return(f.querySelector('#'+id).value||'').trim()};
+      var o=sel.options[sel.selectedIndex],to=o.value||'enquiry@dktconsult.com',v=function(id){return(f.querySelector('#'+id).value||'').trim()};
       var subj='Website enquiry: '+o.text+(v('org')?' ('+v('org')+')':'');
       var body='Name: '+v('name')+'\nEmail: '+v('email')+'\nPhone: '+v('phone')+'\nOrganisation: '+v('org')+'\nTopic: '+o.text+'\n\n'+v('msg');
       location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body)})}
