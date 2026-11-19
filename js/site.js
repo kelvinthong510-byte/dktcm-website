@@ -16,9 +16,11 @@
       var topic=o.text,data={_subject:'Website enquiry: '+topic,_replyto:v('email'),_captcha:'false',_template:'table',_honey:v('hp'),
         Topic:topic,Name:v('name'),Email:v('email'),Phone:v('phone')||'-',Company:v('org')||'-',Message:v('msg'),Page:location.href};
       var mail='mailto:'+to+'?subject='+encodeURIComponent(data._subject)+'&body='+encodeURIComponent('Name: '+data.Name+'\nEmail: '+data.Email+'\nPhone: '+data.Phone+'\nCompany: '+data.Company+'\nTopic: '+topic+'\n\n'+data.Message);
-      btn.disabled=true;btn.textContent='Sending…';msg('','');
-      fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
-      .then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok||String(j.success)==='false')throw new Error(j.message||'failed');return j})})
+      btn.disabled=true;btn.textContent='Sending…';msg('wait','Sending your enquiry. This can take up to a minute; please keep this page open.');
+      function post(n){return fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+        .then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok||String(j.success)==='false')throw new Error(j.message||'failed');return j})})
+        .catch(function(err){if(n>1)return new Promise(function(ok){setTimeout(ok,2500)}).then(function(){return post(n-1)});throw err})}
+      post(3)
       .then(function(){f.reset();upd();msg('ok','<strong>Thank you. Your enquiry has been sent.</strong> We will reply to you by email as soon as possible.');btn.textContent='Sent'})
       .catch(function(){msg('err','Sorry, your enquiry could not be sent just now. Please try again, or <a href="'+mail+'">email us directly at '+to+'</a>.');btn.disabled=false;btn.textContent='Send enquiry'})
       .then(function(){if(btn.textContent==='Sent')setTimeout(function(){btn.disabled=false;btn.textContent='Send enquiry'},4000)})
